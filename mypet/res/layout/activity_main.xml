@@ -5,80 +5,56 @@
     android:background="@drawable/chat_bg_default"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-	
-	<RelativeLayout
-	    android:id="@+id/chat_title"
-	    android:layout_width="fill_parent"
-	    android:layout_height="45dp"
-	    android:gravity="center"
-	    android:background="@drawable/title_bar">
-	    
-	    <TextView 
-	        android:id="@+id/maintitle"
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:text="@string/chat_title"
-	        android:textColor="#fff"
-	        android:textSize="20sp"
-	        android:textStyle="bold"
-	        android:layout_centerInParent="true"/>
-	    
-	    <Button 
-	        android:id="@+id/history"
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:textColor="#fff"
-	        android:textSize="20sp"
-	        android:layout_toRightOf="@id/maintitle"
-	        android:layout_marginLeft="50dp"
-	        android:text="历史"/>
-   	</RelativeLayout> 
-   	
-	<RelativeLayout 
-	    android:id="@+id/chat_bottom"
-	    android:layout_height="55dp"
-	    android:layout_width="fill_parent"
-	    android:background="@drawable/bottom_bar"
-	    android:layout_alignParentBottom="true"
-	    >
-	    
-	    <Button 
-	        android:id="@+id/send_message_button"
-	        android:layout_width="60dp"
-	        android:layout_height="40dp"
-	        android:background="@drawable/chat_send_btn"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="10dp"
-	        android:layout_centerVertical="true"
-	        android:text="@string/send_message"
-	        android:onClick="sendMessage"/>
-	    
-	    <EditText 
-	        android:id="@+id/id_chat_message"
-	        android:layout_height="40dp"
-	        android:layout_width="fill_parent"
-	        android:layout_marginLeft="10dp"
-	        android:layout_marginRight="10dp"
-	        android:layout_centerVertical="true"
-	        android:layout_toLeftOf="@id/send_message_button"
-	        android:textSize="18sp"
-	        android:background="@drawable/login_edit_normal"
-	        android:singleLine="true"/>
-	    
-	</RelativeLayout>
-    	
-	
-	<ListView 
-	    android:id="@+id/chat_listview"
-	    android:layout_height="fill_parent"
-	    android:layout_width="fill_parent"
-	    android:divider="@null"
-	    android:dividerHeight="5dp"
-	    android:layout_above="@id/chat_bottom"
-	    android:layout_below="@id/chat_title"
-	    android:scrollbarStyle="outsideOverlay"
-	    android:cacheColorHint="#0000">
-	    
-	    
-	</ListView>
+
+
+    <RelativeLayout
+        android:id="@+id/chat_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_bar" >
+
+        <Button
+            android:id="@+id/send_message_button"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/chat_send_btn"
+            android:onClick="sendMessage"
+            android:text="@string/send_message" />
+
+        <EditText
+            android:id="@+id/id_chat_message"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/send_message_button"
+            android:background="@drawable/login_edit_normal"
+            android:singleLine="true"
+            android:textSize="18sp" 
+            android:hint="@string/hint"/>
+    </RelativeLayout>
+
+    <com.example.layout.RefreshableView
+        android:id="@+id/refreshable_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/chat_bottom"
+        android:paddingTop="5dp" >
+
+        <ListView
+            android:id="@+id/chat_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:cacheColorHint="#0000"
+            android:divider="@null"
+            android:dividerHeight="5dp"
+            android:scrollbarStyle="outsideOverlay" >
+        </ListView>
+    </com.example.layout.RefreshableView>
+
 </RelativeLayout>

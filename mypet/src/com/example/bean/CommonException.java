@@ -3,6 +3,11 @@ package com.example.bean;
 public class CommonException extends RuntimeException
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3818851351949440904L;
+
 	public CommonException()
 	{
 		super();
