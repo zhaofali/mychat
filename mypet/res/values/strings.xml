@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">mypet</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- main view -->
+    <string name="left_string">2015/3/15 16:39</string>
+    <string name="right_string">2015/3/15 16:39</string>
+    <string name="pet_name">小宝贝</string>
+    <string name="my_name">哥哥</string>
+    <string name="default_message">你好啊</string>
+    <string name="chat_title">聊天室</string>
+    <string name="send_message">发送</string>
+</resources>
