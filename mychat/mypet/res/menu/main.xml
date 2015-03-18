@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/server_message"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/server"/>
+    <item
         android:id="@+id/history_message"
         android:orderInCategory="100"
         android:showAsAction="always"

@@ -62,7 +62,7 @@ public class ChatMessage {
 	@SuppressLint("SimpleDateFormat")
 	public void setDate(Date date) {
 		this.date = date;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 		dateStr = df.format(this.date);
 	}
 

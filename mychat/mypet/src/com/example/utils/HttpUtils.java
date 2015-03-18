@@ -7,13 +7,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import android.util.Log;
 
 import com.example.bean.ChatMessage;
 import com.example.bean.ChatMessage.Type;
 import com.example.bean.CommonException;
+import com.example.bean.Message;
 import com.example.bean.Result;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class HttpUtils
 {
@@ -126,6 +134,128 @@ public class HttpUtils
 			conn.disconnect();
 		}
 
+	}
+	
+	/**
+	 * 向服务器存储发送的信息
+	 * @param msg
+	 */
+	public static void storeMsg(ChatMessage msg){
+		URL url = null;
+		HttpURLConnection con = null;
+		
+		try {
+			url = new URL(getParams(msg));
+			con = (HttpURLConnection) url.openConnection();
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+			con.setRequestMethod("GET");
+			
+			if(con.getResponseCode() != 200){
+				Log.d("httpUtil", "请求失败");
+				throw new CommonException("存储服务器连接错误!");
+			}
+		} catch (Exception e) {
+			Log.e("httpUtil", e.getMessage());
+			throw new CommonException("存储服务器连接错误!");
+		} finally{
+			con.disconnect();
+		}
+	}
+	
+	private static String getParams(ChatMessage msg){
+		String result = C.SERVER;
+		StringBuffer sb = new StringBuffer();
+		sb.append("?name=");
+		sb.append(URLEncoder.encode(msg.getName()));
+		sb.append("&message=");
+		sb.append(URLEncoder.encode(msg.getMsg()));
+		sb.append("&dateStr=");
+		sb.append(msg.getDateStr());
+		sb.append("&type=1&action=store");
+		return result+sb.toString();
+	}
+	
+	/**
+	 * 从存储服务器获取未读消息
+	 * @param name
+	 * @return
+	 */
+	public static List<ChatMessage> getMessageFromServer(String name){
+		List<ChatMessage> list = new ArrayList<ChatMessage>();
+		URL url = null;
+		HttpURLConnection con = null;
+		String respond = "";
+		try {
+			url = new URL(C.SERVER+"?action=get&name="+URLEncoder.encode(name));
+			con = (HttpURLConnection) url.openConnection();
+			con.setReadTimeout(5 * 1000);
+			con.setConnectTimeout(5 * 1000);
+			con.setRequestMethod("GET");
+			
+			if(con.getResponseCode() != 200){
+				throw new CommonException("存储服务器连接错误！");
+			}
+			respond = getRespondJson(con.getInputStream());
+			
+			Log.d("json", respond);
+			
+			Gson gson = new Gson();  
+			
+			List<Message>  listMsg = gson.fromJson(respond, new TypeToken<List<Message>>() {  
+            }.getType()); 
+			
+			Iterator<Message> it = listMsg.iterator();
+			while(it.hasNext()){
+				ChatMessage m = new ChatMessage();
+				Message msg = it.next();
+				if(msg.getMessage().trim() == ""){
+					continue;
+				}
+				m.setDateStr(msg.getDateStr());
+				m.setMsg(msg.getMessage());
+				m.setType(Type.INPUT);
+				m.setName("宝宝");
+				list.add(m);
+			}
+		} catch (Exception e) {
+			ChatMessage message = new ChatMessage();
+			message.setName("宝宝");
+			message.setDateStr(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(new Date()));
+			message.setMsg("服务器挂了啊");
+			list.add(message);
+			return list;
+		} finally{
+			if(con != null)
+			con.disconnect();
+		}
+		if(list != null && list.size() == 0){
+			ChatMessage message = new ChatMessage();
+			message.setName("宝宝");
+			message.setDateStr(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(new Date()));
+			message.setMsg("没有留言");
+			list.add(message);
+		}
+		return list;
+	}
+	
+	/**
+	 * 将返回的流组成字符串
+	 * @param inputStream
+	 * @return
+	 * @throws IOException 
+	 */
+	private static String getRespondJson(InputStream in) throws IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		
+		int length = -1;
+		byte[] buff = new byte[1024];
+		
+		while((length = in.read(buff)) != -1){
+			bos.write(buff, 0, length);
+		}
+		bos.flush();
+		return bos.toString();
 	}
 
 }
