@@ -1,14 +1,17 @@
 package com.example.layout;
 
+import com.example.mypet.GirlActivity;
+import com.example.mypet.MainActivity;
 import com.example.mypet.R;
+import com.example.mypet.WifiActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.RelativeLayout;
 
 public class MenuLeftFragment extends Fragment
@@ -41,6 +44,12 @@ public class MenuLeftFragment extends Fragment
 				third_wifi.getBackground().setAlpha(0);
 				first_robot.setBackgroundColor(Color.BLUE);
 				first_robot.getBackground().setAlpha(255);
+				first_robot.setClickable(false);
+				second_girl.setClickable(true);
+				third_wifi.setClickable(true);
+				
+				Intent intent = new Intent(getActivity(), MainActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -53,6 +62,11 @@ public class MenuLeftFragment extends Fragment
 				third_wifi.getBackground().setAlpha(0);
 				second_girl.setBackgroundColor(Color.BLUE);
 				second_girl.getBackground().setAlpha(255);
+				first_robot.setClickable(true);
+				second_girl.setClickable(false);
+				third_wifi.setClickable(true);
+				Intent intent = new Intent(getActivity(), GirlActivity.class);
+				startActivity(intent);
 			}
 		});
 		third_wifi.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +78,11 @@ public class MenuLeftFragment extends Fragment
 				first_robot.getBackground().setAlpha(0);
 				third_wifi.setBackgroundColor(Color.BLUE);
 				third_wifi.getBackground().setAlpha(255);
+				first_robot.setClickable(true);
+				second_girl.setClickable(true);
+				third_wifi.setClickable(false);
+				Intent intent = new Intent(getActivity(), WifiActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

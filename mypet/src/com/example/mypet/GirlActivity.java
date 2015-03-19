@@ -34,7 +34,7 @@ import com.example.utils.C;
 import com.example.utils.HttpUtils;
 import com.nineoldandroids.view.ViewHelper;
 
-public class MainActivity extends FragmentActivity {
+public class GirlActivity extends FragmentActivity {
 
 	private ListView mChatView;
 
@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity {
 				ChatMessage from = (ChatMessage) msg.obj;
 				lMsg.add(from);
 
-				dbDao.insert(from,C.robot);
+				dbDao.insert(from, C.girl);
 				mAdapter.notifyDataSetChanged();
 				mChatView.setSelection(lMsg.size() - 1);
 			} else if (msg.what == 3) {
@@ -74,7 +74,7 @@ public class MainActivity extends FragmentActivity {
 			} else if (msg.what == 2) {
 				@SuppressWarnings("unchecked")
 				List<ChatMessage> list = (List<ChatMessage>) msg.obj;
-				lMsg.addAll(0, list);
+				lMsg.addAll(list);
 				mAdapter.notifyDataSetChanged();
 				mChatView.setSelection(lMsg.size() - 1 - size);
 			} else {
@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity {
 							.format(new Date());
 				}
 				Log.d("history", dateStr);
-				List<ChatMessage> history = dbDao.query(dateStr,C.robot);
+				List<ChatMessage> history = dbDao.query(dateStr, C.girl);
 				Log.d("history", "history size" + history.size());
 				if (history != null && history.size() > 0) {
 					lMsg.addAll(0, history);
@@ -127,13 +127,39 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.robot_main);
+		setContentView(R.layout.girl_main);
 
 		initView();
 		initEvents();
 		dbDao = new MySQLiteDao(this);
 		mAdapter = new ChatMessageAdapter(this, lMsg);
 		mChatView.setAdapter(mAdapter);
+
+		// 开启一个线程，每一秒查询存储服务器是否有更新信息
+		new Thread() {
+			public void run() {
+				while (true) {
+					List<ChatMessage> list = HttpUtils
+							.getMessageFromServer("哥哥");
+					Message message = Message.obtain();
+					if (list != null && list.size() > 0) {
+						
+						//将所有数据存入服务器
+						dbDao.insertAll(list, C.girl);
+						
+						message.obj = list;
+						message.what = 2;
+						mHandler.sendMessage(message);
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						Log.d("thread", "查询线程有异常");
+					}
+				}
+			};
+		}.start();
 	}
 
 	protected void onStart() {
@@ -145,20 +171,6 @@ public class MainActivity extends FragmentActivity {
 		refreshableView.setOnRefreshListener(new PullToRefreshListener() {
 			@Override
 			public void onRefresh() {
-				// new Thread() {
-				// public void run() {
-				// List<ChatMessage> list = HttpUtils
-				// .getMessageFromServer("哥哥");
-				// Message message = Message.obtain();
-				// if (list != null && list.size() > 0) {
-				// message.obj = list;
-				// message.what = 2;
-				// } else {
-				// message.what = 1;
-				// }
-				// mHandler.sendMessage(message);
-				// }
-				// }.start();
 				Message message = Message.obtain();
 				message.what = 1;
 				mHandler.sendMessage(message);
@@ -170,21 +182,31 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
 		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
 				Gravity.RIGHT);
-		// ChatMessage message = new ChatMessage(Type.INPUT, "您好，我是宝宝");
-		// message.setDate(new Date());
-		// message.setName("宝宝");
-		// lMsg.add(message);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.robot, menu);
+		getMenuInflater().inflate(R.menu.girl, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.server_message:
+			new Thread() {
+				public void run() {
+					List<ChatMessage> list = HttpUtils
+							.getMessageFromServer("哥哥");
+					Message message = Message.obtain();
+					if (list != null && list.size() > 0) {
+						message.obj = list;
+						message.what = 2;
+						mHandler.sendMessage(message);
+					}
+				}
+			}.start();
+			return true;
 		case R.id.history_message:
 			Message message = Message.obtain();
 			message.what = 1;
@@ -205,12 +227,13 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "发送文字不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
+
 		final ChatMessage to = new ChatMessage(Type.OUTPUT, msg);
 		to.setDate(new Date());
 		to.setName("哥哥");
 		lMsg.add(to);
 
-		dbDao.insert(to,C.robot);
+		dbDao.insert(to, C.girl);
 
 		mAdapter.notifyDataSetChanged();
 		mChatView.setSelection(lMsg.size() - 1);
@@ -231,12 +254,12 @@ public class MainActivity extends FragmentActivity {
 			public void run() {
 				ChatMessage from = null;
 				try {
-					from = HttpUtils.sendMsg(msg);
+					HttpUtils.storeMsg(to);
 				} catch (Exception e) {
 					from = new ChatMessage(Type.INPUT, "服务器挂了呢...");
 				}
 				Message message = Message.obtain();
-				message.what = 0;
+				message.what = 3;
 				message.obj = from;
 				mHandler.sendMessage(message);
 			};

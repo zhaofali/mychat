@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/joinwifi"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/joinwifi"/>
+	<item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/logout"/>
+</menu>

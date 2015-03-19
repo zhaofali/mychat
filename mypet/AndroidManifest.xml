@@ -8,6 +8,7 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="17" />
 	 <uses-permission android:name="android.permission.INTERNET" />
+	 <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -21,6 +22,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.mypet.GirlActivity"
+            android:label="@string/girl" >
+        </activity>
+        <activity
+            android:name="com.example.mypet.WifiActivity"
+            android:label="@string/wifi" >
         </activity>
     </application>
 
