@@ -100,7 +100,7 @@ public class GirlActivity extends FragmentActivity {
 	};
 
 	/**
-	 * fuction »ñÈ¡listÖĞ×îĞ¡µÄÊ±¼ä
+	 * fuction ï¿½ï¿½È¡listï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½Ê±ï¿½ï¿½
 	 * 
 	 * @param lMsg
 	 */
@@ -135,16 +135,16 @@ public class GirlActivity extends FragmentActivity {
 		mAdapter = new ChatMessageAdapter(this, lMsg);
 		mChatView.setAdapter(mAdapter);
 
-		// ¿ªÆôÒ»¸öÏß³Ì£¬Ã¿Ò»Ãë²éÑ¯´æ´¢·şÎñÆ÷ÊÇ·ñÓĞ¸üĞÂĞÅÏ¢
+		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³Ì£ï¿½Ã¿Ò»ï¿½ï¿½ï¿½Ñ¯ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ğ¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 		new Thread() {
 			public void run() {
 				while (true) {
 					List<ChatMessage> list = HttpUtils
-							.getMessageFromServer("¸ç¸ç");
+							.getMessageFromServer("ï¿½ï¿½ï¿½");
 					Message message = Message.obtain();
 					if (list != null && list.size() > 0) {
 						
-						//½«ËùÓĞÊı¾İ´æÈë·şÎñÆ÷
+						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						dbDao.insertAll(list, C.girl);
 						
 						message.obj = list;
@@ -155,7 +155,7 @@ public class GirlActivity extends FragmentActivity {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-						Log.d("thread", "²éÑ¯Ïß³ÌÓĞÒì³£");
+						Log.d("thread", "ï¿½ï¿½Ñ¯ï¿½ß³ï¿½ï¿½ï¿½ï¿½ì³£");
 					}
 				}
 			};
@@ -197,7 +197,7 @@ public class GirlActivity extends FragmentActivity {
 			new Thread() {
 				public void run() {
 					List<ChatMessage> list = HttpUtils
-							.getMessageFromServer("¸ç¸ç");
+							.getMessageFromServer("å“¥å“¥");
 					Message message = Message.obtain();
 					if (list != null && list.size() > 0) {
 						message.obj = list;
@@ -224,13 +224,13 @@ public class GirlActivity extends FragmentActivity {
 	public void sendMessage(View view) {
 		final String msg = mMsg.getText().toString();
 		if (msg == null || msg.trim().length() == 0) {
-			Toast.makeText(this, "·¢ËÍÎÄ×Ö²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 		final ChatMessage to = new ChatMessage(Type.OUTPUT, msg);
 		to.setDate(new Date());
-		to.setName("¸ç¸ç");
+		to.setName("å“¥å“¥");
 		lMsg.add(to);
 
 		dbDao.insert(to, C.girl);
@@ -238,16 +238,16 @@ public class GirlActivity extends FragmentActivity {
 		mAdapter.notifyDataSetChanged();
 		mChatView.setSelection(lMsg.size() - 1);
 
-		// Çå¿Õ·¢ËÍÇøµÄÄÚÈİ
+		// ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		mMsg.setText("");
 
-		// ¹Ø±ÕÈí¼üÅÌ
+		// ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm.isActive()) {
-			// Èç¹û¿ªÆô
+			// ï¿½ï¿½ï¿½ï¿½ï¿½
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
 					InputMethodManager.HIDE_NOT_ALWAYS);
-			// ¹Ø±ÕÈí¼üÅÌ£¬¿ªÆô·½·¨ÏàÍ¬£¬Õâ¸ö·½·¨ÊÇÇĞ»»¿ªÆôÓë¹Ø±Õ×´Ì¬µÄ
+			// ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½×´Ì¬ï¿½ï¿½
 		}
 
 		new Thread() {
@@ -256,7 +256,7 @@ public class GirlActivity extends FragmentActivity {
 				try {
 					HttpUtils.storeMsg(to);
 				} catch (Exception e) {
-					from = new ChatMessage(Type.INPUT, "·şÎñÆ÷¹ÒÁËÄØ...");
+					from = new ChatMessage(Type.INPUT, "æœåŠ¡å™¨å‡ºé”™äº†...");
 				}
 				Message message = Message.obtain();
 				message.what = 3;

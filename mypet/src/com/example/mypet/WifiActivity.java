@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -53,6 +51,8 @@ public class WifiActivity extends FragmentActivity {
 	
 	private WifiManager.MulticastLock lock;
 
+	private Button sendButton;
+	
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@SuppressLint("SimpleDateFormat")
@@ -85,7 +85,7 @@ public class WifiActivity extends FragmentActivity {
 	};
 
 	/**
-	 * fuction »ñÈ¡listÖĞ×îĞ¡µÄÊ±¼ä
+	 * fuction ï¿½ï¿½È¡listï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½Ê±ï¿½ï¿½
 	 * 
 	 * @param lMsg
 	 */
@@ -112,14 +112,14 @@ public class WifiActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.robot_main);
+		setContentView(R.layout.wifi_main);
 
 		initView();
 		initEvents();
 		mAdapter = new ChatMessageAdapter(this, lMsg);
 		mChatView.setAdapter(mAdapter);
 		
-		//udp Ïà¹Ø
+		//udp ï¿½ï¿½ï¿½
 		WifiManager manager = (WifiManager) this
 				.getSystemService(Context.WIFI_SERVICE);
 		lock= manager.createMulticastLock("test wifi");
@@ -135,6 +135,7 @@ public class WifiActivity extends FragmentActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
 		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
 				Gravity.RIGHT);
+		sendButton = (Button) findViewById(R.id.send_message_button);
 	}
 
 	@Override
@@ -148,12 +149,12 @@ public class WifiActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.joinwifi:
 
-			// ´´½¨Ò»¸öÏß³Ì£¬¼àÌıudp¹ã²¥ĞÅÏ¢
+			// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½ï¿½ï¿½ï¿½udpï¿½ã²¥ï¿½ï¿½Ï¢
 			ChatMessage sendmessage = new ChatMessage();
 			sendmessage.setDateStr(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss")
 					.format(new Date()));
-			sendmessage.setName("¸ç¸ç");
-			sendmessage.setMsg("ÒÑ¼ÓÈë¾ÖÓòÍøÁÄÌì");
+			sendmessage.setName("å“¥å“¥");
+			sendmessage.setMsg("å·²åŠ å…¥ç¾¤ç»„èŠå¤©");
 			sendmessage.setType(Type.OUTPUT);
 
 			Message message = Message.obtain();
@@ -165,7 +166,6 @@ public class WifiActivity extends FragmentActivity {
 				public void run() {
 					byte[] buffer = new byte[1024];
 					try {
-						@SuppressWarnings("resource")
 						DatagramSocket server = new DatagramSocket(18888);
 						DatagramPacket packet = new DatagramPacket(buffer,
 								buffer.length);
@@ -197,11 +197,11 @@ public class WifiActivity extends FragmentActivity {
 //					DatagramSocket socket;
 //					DatagramPacket packet;
 //					try{
-//					byte[] data = { 1, 2, 3, 4 };
+//					String str = "hahah";
 //					socket = new DatagramSocket();
-//					socket.setBroadcast(true); // ÓĞÃ»ÓĞÃ»É¶²»Í¬
-//					// send¶ËÖ¸¶¨½ÓÊÜ¶ËµÄ¶Ë¿Ú£¬×Ô¼ºµÄ¶Ë¿ÚÊÇËæ»úµÄ
-//					packet = new DatagramPacket(data, data.length,
+//					socket.setBroadcast(true); // ï¿½ï¿½Ã»ï¿½ï¿½Ã»É¶ï¿½ï¿½Í¬
+//					// sendï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ËµÄ¶Ë¿Ú£ï¿½ï¿½Ô¼ï¿½ï¿½Ä¶Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//					packet = new DatagramPacket(str.getBytes(), str.getBytes().length,
 //							InetAddress.getByName("255.255.255.255"), 18888);
 //					while (true) {
 //						Thread.sleep(5000);
@@ -209,7 +209,7 @@ public class WifiActivity extends FragmentActivity {
 //						Log.d("udp", "sending ....");
 //					}
 //					}catch(Exception e){
-//						Log.d("udp","udpÏß³Ì¹ÒÁË");
+//						Log.d("udp","udpï¿½ß³Ì¹ï¿½ï¿½ï¿½");
 //					}
 //				};
 //
@@ -226,47 +226,65 @@ public class WifiActivity extends FragmentActivity {
 
 	public void sendMessage(View view) {
 		final String msg = mMsg.getText().toString();
+		Log.d("sendsocket1",msg);
 		if (msg == null || msg.trim().length() == 0) {
-			Toast.makeText(this, "·¢ËÍÎÄ×Ö²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		final ChatMessage to = new ChatMessage(Type.OUTPUT, msg);
 		to.setDate(new Date());
-		to.setName("¸ç¸ç");
+		to.setName("å“¥å“¥");
 		lMsg.add(to);
 
 		mAdapter.notifyDataSetChanged();
 		mChatView.setSelection(lMsg.size() - 1);
 
-		// Çå¿Õ·¢ËÍÇøµÄÄÚÈİ
+		// ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		mMsg.setText("");
 
-		// ¹Ø±ÕÈí¼üÅÌ
+		// ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm.isActive()) {
-			// Èç¹û¿ªÆô
+			// ï¿½ï¿½ï¿½ï¿½ï¿½
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
 					InputMethodManager.HIDE_NOT_ALWAYS);
-			// ¹Ø±ÕÈí¼üÅÌ£¬¿ªÆô·½·¨ÏàÍ¬£¬Õâ¸ö·½·¨ÊÇÇĞ»»¿ªÆôÓë¹Ø±Õ×´Ì¬µÄ
 		}
 
-		// Ê¹ÓÃudp socket ¹ã²¥
-		lock.acquire();
-		DatagramSocket server;
-		DatagramPacket packet;
-		try {
-			server = new DatagramSocket(18888,
-					InetAddress.getByName("255.255.255.255"));
-			server.setBroadcast(true);
-			packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length);
-			server.send(packet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		lock.release();
+		// 
+		new Thread(){
+			public void run() {
+				Log.d("sendsocket", "before");
+				lock.acquire();
+				
+				DatagramSocket server;
+				DatagramPacket packet;
+				try {
+					server = new DatagramSocket();
+					server.setBroadcast(true);
+					packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
+							InetAddress.getByName("255.255.255.255"), 18888);
+					server.send(packet);
+					Log.d("sendsocket", "after");
+					Log.d("sendsocket", msg);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				lock.release();
+			};
+		}.start();
+		
 	}
 
 	private void initEvents() {
+		
+		sendButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				sendMessage(arg0);
+			}
+		});
+		
 		mDrawerLayout.setDrawerListener(new DrawerListener() {
 			@Override
 			public void onDrawerStateChanged(int newState) {

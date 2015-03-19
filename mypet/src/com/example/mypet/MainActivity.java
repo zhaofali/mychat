@@ -100,7 +100,7 @@ public class MainActivity extends FragmentActivity {
 	};
 
 	/**
-	 * fuction »ñÈ¡listÖĞ×îĞ¡µÄÊ±¼ä
+	 * fuction ï¿½ï¿½È¡listï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½Ê±ï¿½ï¿½
 	 * 
 	 * @param lMsg
 	 */
@@ -148,7 +148,7 @@ public class MainActivity extends FragmentActivity {
 				// new Thread() {
 				// public void run() {
 				// List<ChatMessage> list = HttpUtils
-				// .getMessageFromServer("¸ç¸ç");
+				// .getMessageFromServer("ï¿½ï¿½ï¿½");
 				// Message message = Message.obtain();
 				// if (list != null && list.size() > 0) {
 				// message.obj = list;
@@ -170,9 +170,9 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
 		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
 				Gravity.RIGHT);
-		// ChatMessage message = new ChatMessage(Type.INPUT, "ÄúºÃ£¬ÎÒÊÇ±¦±¦");
+		// ChatMessage message = new ChatMessage(Type.INPUT, "ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½");
 		// message.setDate(new Date());
-		// message.setName("±¦±¦");
+		// message.setName("ï¿½ï¿½ï¿½ï¿½");
 		// lMsg.add(message);
 	}
 
@@ -202,12 +202,12 @@ public class MainActivity extends FragmentActivity {
 	public void sendMessage(View view) {
 		final String msg = mMsg.getText().toString();
 		if (msg == null || msg.trim().length() == 0) {
-			Toast.makeText(this, "·¢ËÍÎÄ×Ö²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å‘é€å†…å®¹ä¸èƒ½ä¸ºç©º", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		final ChatMessage to = new ChatMessage(Type.OUTPUT, msg);
 		to.setDate(new Date());
-		to.setName("¸ç¸ç");
+		to.setName("å“¥å“¥");
 		lMsg.add(to);
 
 		dbDao.insert(to,C.robot);
@@ -215,16 +215,16 @@ public class MainActivity extends FragmentActivity {
 		mAdapter.notifyDataSetChanged();
 		mChatView.setSelection(lMsg.size() - 1);
 
-		// Çå¿Õ·¢ËÍÇøµÄÄÚÈİ
+		// ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		mMsg.setText("");
 
-		// ¹Ø±ÕÈí¼üÅÌ
+		// ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm.isActive()) {
-			// Èç¹û¿ªÆô
+			// ï¿½ï¿½ï¿½ï¿½ï¿½
 			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
 					InputMethodManager.HIDE_NOT_ALWAYS);
-			// ¹Ø±ÕÈí¼üÅÌ£¬¿ªÆô·½·¨ÏàÍ¬£¬Õâ¸ö·½·¨ÊÇÇĞ»»¿ªÆôÓë¹Ø±Õ×´Ì¬µÄ
+			// ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½×´Ì¬ï¿½ï¿½
 		}
 
 		new Thread() {
@@ -233,7 +233,7 @@ public class MainActivity extends FragmentActivity {
 				try {
 					from = HttpUtils.sendMsg(msg);
 				} catch (Exception e) {
-					from = new ChatMessage(Type.INPUT, "·şÎñÆ÷¹ÒÁËÄØ...");
+					from = new ChatMessage(Type.INPUT, "æœåŠ¡å™¨å‡ºé”™äº†...");
 				}
 				Message message = Message.obtain();
 				message.what = 0;
